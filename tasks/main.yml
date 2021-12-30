@@ -1,2 +1,22 @@
 ---
 # tasks file for ansible_role_mariadb_database
+
+- name: Set random MySQL password when ansible_role_mariadb_database_db_pass not defined
+  set_fact:
+    ansible_role_mariadb_database_db_pass: "{{ ansible_role_mariadb_database_db_rand_pass }}"
+  when: ansible_role_mariadb_database_db_pass is undefined
+
+- name: Create WordPress database
+  mysql_db:
+    login_unix_socket: "{{ ansible_role_mariadb_database_socket_path }}"
+    name: "{{ ansible_role_mariadb_database_db_name }}"
+    state: present
+  register: db_name
+
+- name: Create DB user
+  mysql_user:
+    login_unix_socket: "{{ ansible_role_mariadb_database_socket_path }}"
+    name: "{{ ansible_role_mariadb_database_db_user }}"
+    password: "{{ ansible_role_mariadb_database_db_pass }}"
+    priv: "{{ ansible_role_mariadb_database_db_name }}.*:ALL"
+    state: present

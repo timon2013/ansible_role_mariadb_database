@@ -1,2 +1,7 @@
 ---
 # defaults file for ansible_role_mariadb_database
+ansible_role_mariadb_database_socket_path: /var/lib/mysql/mysql.sock
+ansible_role_mariadb_database_db_name: database1
+ansible_role_mariadb_database_db_user: user
+ansible_role_mariadb_database_db_rand_pass: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters') }}"
+#ansible_role_mariadb_database_db_pass: 
